@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Seance_3_1
+namespace RPG
 {
-    class Ring
+    public class Ring
     {
         private int[,] ring;
         private static int compteurItem = 0;

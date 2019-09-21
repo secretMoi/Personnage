@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Seance_3_1
+namespace RPG
 {
     public class Banque
     {

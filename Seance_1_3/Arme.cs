@@ -1,61 +1,91 @@
 ﻿﻿using System;
-using System.Collections.Generic;
-using System.Text;
+ using System.Collections;
 
-namespace Seance_3_1
+ namespace RPG
 {
-    class Arme
+    public class Arme
     {
         private int typeArme;
         private int degats;
         private int portee;
         private String nom;
-
+        private const int armeMax = 1;
         public const int BATON = 0;
         public const int MAINS = 1;
+        private static ArrayList liste = new ArrayList();
 
         public Arme(int typeArme)
         {
-            this.typeArme = typeArme;
+            if (EstValide(typeArme)) this.typeArme = typeArme;
+            else this.typeArme = MAINS;
+            
             AssocieDegats();
         }
 
         public Arme()
         {
-            this.typeArme = BATON;
+            typeArme = MAINS;
             AssocieDegats();
         }
 
-        protected void AssocieDegats()
+        private void AssocieDegats()
         {
             switch (typeArme)
             {
                 case BATON:
-                    this.degats = 15;
-                    this.portee = 1;
-                    this.nom = "Bâton";
+                    degats = 15;
+                    portee = 2;
+                    nom = "Bâton";
+                    break;
+                case MAINS:
+                    degats = 5;
+                    portee = 1;
+                    nom = "Mains nues";
                     break;
                 default:
-                    this.degats = 5;
-                    this.portee = 1;
-                    this.nom = "Mains nues";
+                    degats = 0;
+                    portee = 0;
+                    nom = "Aucune";
                     break;
             }
         }
-        
-        public int GetPortee()
+
+        public bool EstValide(int arme)
         {
-            return this.portee;
+            return arme > 0 && arme <= armeMax;
         }
 
-        public string GetNom()
+        private ArrayList Liste()
         {
-            return this.nom;
+            if (liste.Count == 0)
+            {
+                liste.Add("Bâton");
+                liste.Add("Mains nues");
+            }
+
+            return liste;
         }
 
-        public int GetDegats()
+        public void AfficherListe()
         {
-            return this.degats;
+            int compteur = 1;
+            foreach (string nom in Liste())
+            {
+                Console.WriteLine("{0} - {1}", compteur, nom);
+                compteur++;
+            }
+        }
+
+        public int Portee => portee;
+
+        public string Nom => nom;
+
+        public int Degats => degats;
+
+        public int TypeArme
+        {
+            get => typeArme;
+            set => typeArme = value;
         }
     }
 }

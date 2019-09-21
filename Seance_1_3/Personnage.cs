@@ -1,26 +1,26 @@
 ﻿﻿using System;
-using System.Collections.Generic;
-using System.Text;
+ using System.Collections;
 
-namespace Seance_3_1
+ namespace RPG
 {
-    class Personnage
+    public class Personnage
     {
-        private Arme arme;
-        private Ressource ressource;
-        private Banque banque;
-        private int vie;
-        private int mana;
-        private static Ring ring;
-        private static int nombreJoueurs = 0;
-        private bool etat; // si le perso est vivant
-        private int id;
-        private string nom;
-        private const int vieMax = 100;
-        private const int potionVie = 20;
-        private const int manaMax = 100;
-        private const int coutPotionVie = 20;
-        private string datteConstruction;
+        protected Arme arme;
+        protected Ressource ressource;
+        protected Banque banque;
+        protected int vie;
+        protected int mana;
+        protected static Ring ring;
+        protected static int nombreJoueurs = 0;
+        private static ArrayList ids = new ArrayList();
+        protected bool etat; // si le perso est vivant
+        protected int id;
+        protected string nom;
+        protected const int vieMax = 100;
+        protected const int potionVie = 20;
+        protected const int manaMax = 100;
+        protected const int coutPotionVie = 20;
+        protected string dateConstruction;
 
         public Personnage(Ring ringObject, int arme = Arme.MAINS)
         {
@@ -35,34 +35,41 @@ namespace Seance_3_1
             etat = false;
         }
 
-        protected void InitConstructeur(int arme, int x = 0, int y = 0)
+        protected virtual void InitConstructeur(int arme, int x = 0, int y = 0)
             {
             this.arme = new Arme(arme);
             vie = vieMax;
             mana = manaMax;
             etat = true;
+            
+            banque = new Banque();
+            ressource = new Ressource();
 
             nombreJoueurs++;
 
             id = ring.AjouterElement(nombreJoueurs, x, y);
+            ids.Add(id);
             nom = "Player" + id;
             
-            datteConstruction = DateTime.Now.ToString("dd/MM/yyyy");
+            dateConstruction = DateTime.Now.ToString("dd/MM/yyyy");
         }
 
         public void RecevoirDegats(int degats)
         {
-            Random aleatoire = new Random();
-            int nombreChance = aleatoire.Next(1, 6);
+            if (degats > 0)
+            {
+                Random aleatoire = new Random();
+                int nombreChance = aleatoire.Next(1, 6);
 
-            if (nombreChance > 3)
-                vie -= (int) Math.Ceiling(Math.Sqrt(degats));
-            else
-                vie -= degats;
+                if (nombreChance > 3)
+                    vie -= (int) Math.Ceiling(Math.Sqrt(degats));
+                else
+                    vie -= degats;
 
-            if (vie <= 0){
-                etat = false; // si la cible est morte
-                vie = 0;
+                if (vie <= 0){
+                    etat = false; // si la cible est morte
+                    vie = 0;
+                }
             }
         }
 
@@ -84,10 +91,10 @@ namespace Seance_3_1
             bool resultat = ring.Deplace(id, x, y);
 
             if (resultat == false)
-                Message.AddMessage("Déplacement impossible");
+                Message.Add("Déplacement impossible");
         }
 
-        public void ActonDeplacement()
+        public void ActionDeplacement()
         {
             switch (Console.ReadLine())
             {
@@ -104,31 +111,50 @@ namespace Seance_3_1
                 SeDeplace(Ring.RIGHT);
                 break;
             default:
-                Message.AddMessage("Mouvement non conforme");
+                Message.Add("Mouvement non conforme");
                 break;
             }
         }
         public void ActionAttaque(Personnage personnage)
         {
+            if(personnage.Existe())
+                return;
+            
             if(APortee(personnage))
-                personnage.RecevoirDegats(arme.GetDegats());
+                personnage.RecevoirDegats(Arme.Degats);
             else
-                Message.AddMessage("Vous n'avez pas la portée requise : " + ring.Distance(id, personnage.id));
+                Message.Add("Vous n'avez pas la portée requise : " + ring.Distance(id, personnage.id));
         }
 
         public bool APortee(Personnage personnage)
         {
-            return ring.Distance(id, personnage.id) <= arme.GetPortee();
+            if(personnage.Existe())
+                return ring.Distance(id, personnage.id) <= Arme.Portee;
+
+            return false;
         }
 
         public void AfficherEtat()
         {
+            Console.WriteLine("Classe : " + NomClasse());
             Console.WriteLine("Nom : " + nom);
-            Console.WriteLine("Arme : " + arme.GetNom());
-            Console.WriteLine("Portée arme : " + arme.GetPortee());
             Console.WriteLine("Vie : " + vie);
             Console.WriteLine("Mana : " + mana);
+            Console.WriteLine("Arme : {0} ({1})", Arme.Nom, Arme.Degats);
+            Console.WriteLine("Portée arme : " + Arme.Portee);
             Console.WriteLine("");
+        }
+
+        public virtual string NomClasse()
+        {
+            return "Non défini";
+        }
+
+        public bool Existe()
+        {
+            if (!(ids.Contains(id))) return false;
+            
+            return etat;
         }
 
         public override string ToString()
@@ -136,13 +162,8 @@ namespace Seance_3_1
             return nom;
         }
 
-        public bool GetEtat()
-        {
-            return etat;
-        }
+        public virtual Arme Arme => arme;
 
-        public Arme Arme => arme;
-
-        public string DatteConstruction => datteConstruction;
+        public string DateConstruction => dateConstruction;
     }
 }

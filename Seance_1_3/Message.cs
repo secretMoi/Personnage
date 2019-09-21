@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Seance_3_1
+namespace RPG
 {
     static class Message
     {
@@ -17,7 +17,7 @@ namespace Seance_3_1
             messageList.Clear();
         }
 
-        public static void AddMessage(string message)
+        public static void Add(string message)
         {
             messageList.Add(message);
         }

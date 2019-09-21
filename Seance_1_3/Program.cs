@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Seance_3_1
+namespace RPG
 {
     partial class Program
     {
