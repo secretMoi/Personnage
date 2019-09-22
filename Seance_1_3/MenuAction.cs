@@ -38,7 +38,7 @@ namespace RPG
 
             if (error == false) // si il n'y a pas d'erreur
             {
-                ring.DisplayGrid();
+                ring.DisplayGrid(tourJoueur + 1, ConsoleColor.DarkGray);
                 joueur.AfficherEtat();
             }
             
@@ -50,8 +50,8 @@ namespace RPG
 
             if (error == false)
             {
-                IncrementeTour();
                 Console.Clear();
+                IncrementeTour();
             }
 
             ListeActions();
