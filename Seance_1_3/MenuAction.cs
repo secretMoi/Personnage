@@ -16,13 +16,16 @@ namespace RPG
 
         private bool error;
 
+        private ArrayList choix = new ArrayList();
+        private int compteur;
+
         public MenuAction()
         {
             Console.SetWindowSize(consoleX, consoleY); // taille console
-            Console.SetBufferSize(consoleX * 2, consoleY * 2); // taille buffer
+            Console.SetBufferSize(consoleX * 2, consoleY * 4); // taille buffer
 
-            player.Add(new Guerrier(this.ring));
-            player.Add(new Magicien(this.ring, 0, 1));
+            player.Add(new Guerrier(ring));
+            player.Add(new Magicien(ring, 0, 1));
 
             nombreJoueurs = 2;
             error = false;
@@ -33,26 +36,16 @@ namespace RPG
         {
             Personnage joueur = (player[tourJoueur] as Personnage);
 
-            if (error == false)
+            if (error == false) // si il n'y a pas d'erreur
             {
                 ring.DisplayGrid();
                 joueur.AfficherEtat();
-                Console.WriteLine("Actions possibles : ");
-
-                Console.WriteLine("1 - Se déplacer d'une case");
-                Console.WriteLine("2 - Attaquer à max " + joueur.Arme.Portee + " cases");
-                Console.WriteLine("3 - Boire potion de vie contre mana");
-                if(joueur.NomClasse() == "Magicien")
-                    Console.WriteLine("4 - Lancer un sort");
-                if(joueur.NomClasse() == "Voleur")
-                    Console.WriteLine("5 - Voler une arme");
-                if(joueur.NomClasse() == "Guerrier")
-                    Console.WriteLine("6 - Changer d'arme");
-                Console.WriteLine("Q - Quitter");
             }
             
+            AfficheChoix(joueur);
             Action(joueur);
-            error = Message.IsEmpty();
+            
+            error = !(Message.IsEmpty());
             Message.AfficheInfo();
 
             if (error == false)
@@ -66,8 +59,9 @@ namespace RPG
 
         private void Action(Personnage joueur)
         {
-            
-            switch (Console.ReadLine())
+            string choix = Console.ReadLine();
+            string choixConverti = ConvertiChoix(choix);
+            switch (choixConverti)
             {
                 case "1":
                     Console.WriteLine("Déplacements : 4 = Gauche, 6 = Droite, 2 = Bas, 8 = Haut");
@@ -82,12 +76,12 @@ namespace RPG
                     break;
                 case "4":
                     Magicien magicien = (Magicien) joueur;
-                    Console.WriteLine("Indiquez le n° de joueur a dérober");
+                    Console.WriteLine("Indiquez le n° de joueur a attaquer");
                     magicien.LancerSort((player[StringToInt()] as Personnage));
                     break;
                 case "5":
                     Voleur voleur = (Voleur) joueur;
-                    
+                    Console.WriteLine("Indiquez le n° de joueur a dérober");
                     voleur.VolerArme((player[StringToInt()] as Personnage));
                     break;
                 case "6":
@@ -105,13 +99,52 @@ namespace RPG
             }
         }
 
-        protected void IncrementeTour()
+        private string ConvertiChoix(string choix)
+        {
+            if (choix == "Q")
+                return choix;
+
+            int choixNombre = Convert.ToInt32(choix) - 1;
+            object position = this.choix[choixNombre];
+            
+            return position.ToString();
+        }
+
+        public void AfficheChoix(Personnage joueur)
+        {
+            compteur = 1;
+            choix.Clear();
+            Console.WriteLine("Actions possibles : ");
+            
+            AfficheMessageCompteur("Se déplacer d'une case", "1");
+            AfficheMessageCompteur("Attaquer à max " + joueur.Arme.Portee + " cases", "2");
+            AfficheMessageCompteur("Boire potion de vie contre mana", "3");
+            
+            if(joueur.NomClasse() == "Magicien")
+                AfficheMessageCompteur("Lancer un sort", "4");
+            if(joueur.NomClasse() == "Voleur")
+                AfficheMessageCompteur("Voler une arme", "5");
+            if(joueur.NomClasse() == "Guerrier")
+                AfficheMessageCompteur("Changer d'arme", "6");
+            
+            Console.WriteLine("Q - Quitter");
+        }
+
+        private void AfficheMessageCompteur(string message, string choix)
+        {
+            Console.WriteLine("{0} - {1}", compteur, message);
+            this.choix.Add(choix);
+            
+            compteur++;
+        }
+
+        private void IncrementeTour()
         {
             tourJoueur++;
             if (tourJoueur == nombreJoueurs) tourJoueur = 0;
         }
 
-        protected int StringToInt()
+        private int StringToInt()
         {
             string texte = Console.ReadLine();
 

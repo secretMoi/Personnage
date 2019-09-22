@@ -21,10 +21,14 @@ namespace RPG
             vie = vieMax;
             mana = manaMax;
             etat = true;
+            
+            banque = new Banque();
+            ressource = new Ressource();
 
             nombreJoueurs++;
 
             id = ring.AjouterElement(nombreJoueurs, x, y);
+            ids.Add(id);
             nom = "Player" + id;
             
             dateConstruction = DateTime.Now.ToString("dd/MM/yyyy");

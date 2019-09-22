@@ -1,6 +1,7 @@
 ﻿﻿using System;
 using System.Collections.Generic;
-using System.Text;
+ using System.Drawing;
+ using System.Text;
 
 namespace RPG
 {
@@ -9,12 +10,18 @@ namespace RPG
         private static List<string> messageList = new List<string>();
         public static void AfficheInfo()
         {
-            foreach (string element in messageList)
+            if (!IsEmpty())
             {
-                Console.WriteLine(element);
+                ConsoleColor ancienneCouleur = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                foreach (string element in messageList)
+                {
+                    Console.WriteLine(element);
+                }
+            
+                Console.ForegroundColor = ancienneCouleur;
+                messageList.Clear();
             }
-
-            messageList.Clear();
         }
 
         public static void Add(string message)
@@ -29,7 +36,7 @@ namespace RPG
 
         public static bool IsEmpty()
         {
-            return messageList.Count != 0;
+            return messageList.Count == 0;
         }
     }
 }

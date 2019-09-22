@@ -3,7 +3,7 @@
 
  namespace RPG
 {
-    public class Personnage
+    public abstract class Personnage
     {
         protected Arme arme;
         protected Ressource ressource;
@@ -12,7 +12,7 @@
         protected int mana;
         protected static Ring ring;
         protected static int nombreJoueurs = 0;
-        private static ArrayList ids = new ArrayList();
+        protected static ArrayList ids = new ArrayList();
         protected bool etat; // si le perso est vivant
         protected int id;
         protected string nom;
@@ -32,11 +32,10 @@
         {
             ring = ringObject;
             InitConstructeur(arme, x, y);
-            etat = false;
         }
 
         protected virtual void InitConstructeur(int arme, int x = 0, int y = 0)
-            {
+        {
             this.arme = new Arme(arme);
             vie = vieMax;
             mana = manaMax;
@@ -54,7 +53,7 @@
             dateConstruction = DateTime.Now.ToString("dd/MM/yyyy");
         }
 
-        public void RecevoirDegats(int degats)
+        public virtual void RecevoirDegats(int degats)
         {
             if (degats > 0)
             {
@@ -117,20 +116,28 @@
         }
         public void ActionAttaque(Personnage personnage)
         {
-            if(personnage.Existe())
+            if (!personnage.Existe())
+            {
+                Message.Add(personnage.NomClasse());
+                Message.Add(personnage.etat.ToString());
+                
                 return;
-            
+            }
+                
             if(APortee(personnage))
                 personnage.RecevoirDegats(Arme.Degats);
             else
+            {
                 Message.Add("Vous n'avez pas la portée requise : " + ring.Distance(id, personnage.id));
+                Message.Add("Votre portée est de : " + Arme.Portee);
+            }
         }
 
         public bool APortee(Personnage personnage)
         {
-            if(personnage.Existe())
+            if (personnage.Existe())
                 return ring.Distance(id, personnage.id) <= Arme.Portee;
-
+            
             return false;
         }
 
@@ -145,14 +152,11 @@
             Console.WriteLine("");
         }
 
-        public virtual string NomClasse()
-        {
-            return "Non défini";
-        }
+        public abstract string NomClasse();
 
         public bool Existe()
         {
-            if (!(ids.Contains(id))) return false;
+            if (!ids.Contains(id)) return false;
             
             return etat;
         }

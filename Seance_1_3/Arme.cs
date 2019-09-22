@@ -9,9 +9,13 @@
         private int degats;
         private int portee;
         private String nom;
-        private const int armeMax = 1;
+        
+        private const int armeMax = 3;
         public const int BATON = 0;
         public const int MAINS = 1;
+        public const int EPEE = 2;
+        public const int BOUCLIER = 3;
+        
         private static ArrayList liste = new ArrayList();
 
         public Arme(int typeArme)
@@ -33,7 +37,7 @@
             switch (typeArme)
             {
                 case BATON:
-                    degats = 15;
+                    degats = 10;
                     portee = 2;
                     nom = "Bâton";
                     break;
@@ -41,6 +45,16 @@
                     degats = 5;
                     portee = 1;
                     nom = "Mains nues";
+                    break;
+                case EPEE:
+                    degats = 20;
+                    portee = 1;
+                    nom = "Epée";
+                    break;
+                case BOUCLIER:
+                    degats = 7;
+                    portee = 1;
+                    nom = "Bouclier";
                     break;
                 default:
                     degats = 0;
@@ -61,6 +75,8 @@
             {
                 liste.Add("Bâton");
                 liste.Add("Mains nues");
+                liste.Add("Epée");
+                liste.Add("Bouclier");
             }
 
             return liste;
