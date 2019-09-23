@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿﻿using System;
  using System.Collections;
 
  namespace RPG
@@ -140,15 +140,23 @@
             
             return false;
         }
-
-        public void AfficherEtat()
+        
+        public void AfficherEtat(ElementGraphique elementGraphique)
         {
             Console.WriteLine("Classe : " + NomClasse());
             Console.WriteLine("Nom : " + nom);
-            Console.WriteLine("Vie : " + vie);
-            Console.WriteLine("Mana : " + mana);
+            
+            Console.Write("Vie : {0} / {1} ", vie, VieMax);
+            elementGraphique.BarreProgression(vie, VieMax, ConsoleColor.Red);
+            Console.WriteLine();
+            
+            Console.Write("Mana : {0} / {1} ", mana, ManaMax);
+            elementGraphique.BarreProgression(mana, ManaMax, ConsoleColor.Blue);
+            Console.WriteLine();
+            
             Console.WriteLine("Arme : {0} ({1})", Arme.Nom, Arme.Degats);
             Console.WriteLine("Portée arme : " + Arme.Portee);
+            
             Console.WriteLine("");
         }
 
@@ -167,6 +175,10 @@
         }
 
         public virtual Arme Arme => arme;
+        
+        public virtual int VieMax => vieMax;
+        
+        public virtual int ManaMax => manaMax;
 
         public string DateConstruction => dateConstruction;
     }

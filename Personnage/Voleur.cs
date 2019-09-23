@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 
 namespace RPG
 {
@@ -43,5 +43,8 @@ namespace RPG
         {
             Arme.TypeArme = cible.Arme.TypeArme;
         }
+        
+        public virtual int VieMax => vieMax;
+        public override int ManaMax => manaMax;
     }
 }

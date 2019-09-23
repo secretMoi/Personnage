@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections;
 
 namespace RPG
@@ -77,5 +77,8 @@ namespace RPG
         }
 
         public override Arme Arme => arme[arme.Count - 1] as Arme;
+        
+        public override int VieMax => vieMax;
+        public override int ManaMax => manaMax;
     }
 }

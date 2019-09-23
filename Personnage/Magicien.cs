@@ -1,10 +1,10 @@
-﻿using System;
+﻿﻿using System;
 
 namespace RPG
 {
     public class Magicien : Personnage
     {
-        protected new const int vieMax = 80; // new  car on override Personnage
+        protected new const int vieMax = 80; // new car on override Personnage
         protected new const int manaMax = 180;
         
         public Magicien(Ring ringObject, int arme = Arme.MAINS) : base(ringObject, arme)
@@ -38,10 +38,21 @@ namespace RPG
         {
             return "Magicien";
         }
+        
+        public virtual int VieMax => vieMax;
+        public override int ManaMax => manaMax;
 
         public void LancerSort(Personnage cible)
         {
             cible.RecevoirDegats(20);
         }
+
+        /*public void SelectionnerSort()
+        {
+            switch (Console.ReadLine())
+            {
+                case ""
+            }
+        }*/
     }
 }

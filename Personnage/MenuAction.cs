@@ -1,14 +1,18 @@
-﻿﻿using System;
+﻿﻿﻿using System;
 using System.Collections;
+  using System.Linq;
 
-namespace RPG
+  namespace RPG
 {
     class MenuAction
     {
         private const int consoleX = 60;
         private const int consoleY = 30;
 
+        private bool run;
+
         private Ring ring = new Ring();
+        private ElementGraphique elementGraphique = new ElementGraphique();
         private ArrayList player = new ArrayList();
 
         private int tourJoueur;
@@ -30,31 +34,32 @@ namespace RPG
             nombreJoueurs = 2;
             error = false;
             tourJoueur = 0;
+
+            run = true;
         }
 
         public void ListeActions()
         {
-            Personnage joueur = (player[tourJoueur] as Personnage);
-
-            if (error == false) // si il n'y a pas d'erreur
+            while (run)
             {
+                Personnage joueur = (player[tourJoueur] as Personnage);
+                
                 ring.DisplayGrid(tourJoueur + 1, ConsoleColor.DarkGray);
-                joueur.AfficherEtat();
-            }
-            
-            AfficheChoix(joueur);
-            Action(joueur);
-            
-            error = !(Message.IsEmpty());
-            Message.AfficheInfo();
+                joueur.AfficherEtat(elementGraphique);
 
-            if (error == false)
-            {
+                error = !(Message.IsEmpty());
+                Message.AfficheInfo();
+                
+                AfficheChoix(joueur);
+                Action(joueur);
+
+                if (error == false)
+                {
+                    IncrementeTour();
+                }
+                
                 Console.Clear();
-                IncrementeTour();
             }
-
-            ListeActions();
         }
 
         private void Action(Personnage joueur)
@@ -90,24 +95,32 @@ namespace RPG
                     guerrier.AjouterArme();
                     break;
                 case "Q":
-                    Environment.Exit(1);
+                    run = false;
                     break;
                 default:
-                    Console.WriteLine("Cette option n'est pas dans le menu, veuillez refaire votre choix");
-                    Action(joueur);
+                    Message.Add("Cette option n'est pas dans le menu, veuillez refaire votre choix");
                     break;
             }
+            
+            error = !(Message.IsEmpty());
         }
 
         private string ConvertiChoix(string choix)
         {
-            if (choix == "Q")
+            if (choix == "Q" || choix == "q")
                 return choix;
-
-            int choixNombre = Convert.ToInt32(choix) - 1;
-            object position = this.choix[choixNombre];
+            if (!choix.All(char.IsDigit))
+                return null;
             
-            return position.ToString();
+            int choixNombre = Convert.ToInt32(choix) - 1;
+            string position;
+            
+            if (choixNombre >= 0 && choixNombre < this.choix.Count)
+                position = this.choix[choixNombre].ToString();
+            else
+                position = null;
+            
+            return position;
         }
 
         public void AfficheChoix(Personnage joueur)
