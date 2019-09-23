@@ -20,38 +20,41 @@
         protected const int potionVie = 20;
         protected const int manaMax = 100;
         protected const int coutPotionVie = 20;
+        protected int buffDegats;
         protected string dateConstruction;
 
         public Personnage(Ring ringObject, int arme = Arme.MAINS)
         {
             ring = ringObject;
             InitConstructeur(arme);
+            InitCommun();
         }
 
         public Personnage(Ring ringObject, int x, int y = 0, int arme = Arme.MAINS)
         {
             ring = ringObject;
-            InitConstructeur(arme, x, y);
+            InitConstructeur(arme);
+            InitCommun(x, y);
         }
 
-        protected virtual void InitConstructeur(int arme, int x = 0, int y = 0)
+        protected void InitCommun(int x = 0, int y = 0)
         {
-            this.arme = new Arme(arme);
-            vie = vieMax;
-            mana = manaMax;
             etat = true;
+            buffDegats = 0;
             
             banque = new Banque();
             ressource = new Ressource();
-
+            
             nombreJoueurs++;
-
+            
             id = ring.AjouterElement(nombreJoueurs, x, y);
             ids.Add(id);
             nom = "Player" + id;
             
             dateConstruction = DateTime.Now.ToString("dd/MM/yyyy");
         }
+
+        protected abstract void InitConstructeur(int arme);
 
         public virtual void RecevoirDegats(int degats)
         {
@@ -76,10 +79,7 @@
         {
             if(etat == true && mana > coutPotionVie)
             {
-                if (vie <= vieMax - potionVie)
-                    vie += potionVie;
-                else
-                    vie = vieMax;
+                Soigne(potionVie);
 
                 mana -= coutPotionVie;
             }
@@ -125,7 +125,7 @@
             }
                 
             if(APortee(personnage))
-                personnage.RecevoirDegats(Arme.Degats);
+                personnage.RecevoirDegats(Arme.Degats + buffDegats);
             else
             {
                 Message.Add("Vous n'avez pas la portée requise : " + ring.Distance(id, personnage.id));
@@ -156,8 +156,22 @@
             
             Console.WriteLine("Arme : {0} ({1})", Arme.Nom, Arme.Degats);
             Console.WriteLine("Portée arme : " + Arme.Portee);
+
+            AfficherBuff();
             
             Console.WriteLine("");
+        }
+
+        public void AfficherBuff()
+        {
+            ConsoleColor ancienneCouleur = Console.ForegroundColor;
+            if (buffDegats > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("Buff dégâts : " + buffDegats);
+            }
+
+            Console.ForegroundColor = ancienneCouleur;
         }
 
         public abstract string NomClasse();
@@ -177,9 +191,27 @@
         public virtual Arme Arme => arme;
         
         public virtual int VieMax => vieMax;
-        
+        public virtual int Vie
+        {
+            get => vie;
+            set => vie = value;
+        }
+
         public virtual int ManaMax => manaMax;
 
+        public void BuffDegats(int buff)
+        {
+            buffDegats = buff;
+        }
+
         public string DateConstruction => dateConstruction;
+
+        public void Soigne(int montantSoins)
+        {
+            Vie += montantSoins;
+            
+            if (Vie > VieMax)
+                Vie = VieMax;
+        }
     }
 }

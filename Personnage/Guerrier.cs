@@ -1,7 +1,8 @@
 ﻿﻿using System;
 using System.Collections;
+ using System.Linq;
 
-namespace RPG
+ namespace RPG
 {
     public class Guerrier : Personnage
     {
@@ -17,23 +18,11 @@ namespace RPG
         {
         }
         
-        protected override void InitConstructeur(int arme, int x = 0, int y = 0)
+        protected override void InitConstructeur(int arme)
         {
             this.arme.Add(new Arme(arme));
             vie = vieMax;
             mana = manaMax;
-            etat = true;
-            
-            banque = new Banque();
-            ressource = new Ressource();
-
-            nombreJoueurs++;
-
-            id = ring.AjouterElement(nombreJoueurs, x, y);
-            ids.Add(id);
-            nom = "Player" + id;
-            
-            dateConstruction = DateTime.Now.ToString("dd/MM/yyyy");
         }
         
         public override void RecevoirDegats(int degats)
@@ -70,6 +59,35 @@ namespace RPG
                 else Message.Add("Arme non valide");
             }
         }
+
+        public void JeterArme()
+        {
+            int compteur = 1;
+            
+            Console.WriteLine("Jeter quelle arme ?");
+            
+            foreach (Arme armeCourante in arme)
+            {
+                Console.WriteLine("{0} - {1}", compteur, armeCourante.Nom);
+                compteur++;
+            }
+
+            string choix;
+            int choixNombre;
+            choix = Console.ReadLine();
+            if (!choix.All(char.IsDigit))
+            {
+                Message.Add("Arme non portée");
+                return;
+            }
+                
+            choixNombre = Convert.ToInt32(choix);
+            
+            if(choixNombre > 0 && choixNombre < compteur && arme.Count > 1)
+                arme.RemoveAt(choixNombre-1);
+            else
+                Message.Add("Arme non portée");
+        }
         
         public override string NomClasse()
         {
@@ -79,6 +97,11 @@ namespace RPG
         public override Arme Arme => arme[arme.Count - 1] as Arme;
         
         public override int VieMax => vieMax;
+        public override int Vie
+        {
+            get => vie;
+            set => vie = value;
+        }
         public override int ManaMax => manaMax;
     }
 }

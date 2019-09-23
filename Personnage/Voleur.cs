@@ -15,23 +15,11 @@ namespace RPG
         {
         }
         
-        protected override void InitConstructeur(int arme, int x = 0, int y = 0)
+        protected override void InitConstructeur(int arme)
         {
             this.arme = new Arme(arme);
             vie = vieMax;
             mana = manaMax;
-            etat = true;
-            
-            banque = new Banque();
-            ressource = new Ressource();
-
-            nombreJoueurs++;
-
-            id = ring.AjouterElement(nombreJoueurs, x, y);
-            ids.Add(id);
-            nom = "Player" + id;
-            
-            dateConstruction = DateTime.Now.ToString("dd/MM/yyyy");
         }
         
         public override string NomClasse()
@@ -44,7 +32,12 @@ namespace RPG
             Arme.TypeArme = cible.Arme.TypeArme;
         }
         
-        public virtual int VieMax => vieMax;
+        public override int VieMax => vieMax;
+        public override int Vie
+        {
+            get => vie;
+            set => vie = value;
+        }
         public override int ManaMax => manaMax;
     }
 }

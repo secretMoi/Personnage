@@ -6,6 +6,8 @@ namespace RPG
     {
         protected new const int vieMax = 80; // new car on override Personnage
         protected new const int manaMax = 180;
+        private const int montantBuffDegats = 10;
+        private const int montantSoins = 15;
         
         public Magicien(Ring ringObject, int arme = Arme.MAINS) : base(ringObject, arme)
         {
@@ -15,31 +17,24 @@ namespace RPG
         {
         }
         
-        protected override void InitConstructeur(int arme, int x = 0, int y = 0)
+        protected override void InitConstructeur(int arme)
         {
             this.arme = new Arme(arme);
             vie = vieMax;
             mana = manaMax;
-            etat = true;
-
-            banque = new Banque();
-            ressource = new Ressource();
-
-            nombreJoueurs++;
-
-            id = ring.AjouterElement(nombreJoueurs, x, y);
-            ids.Add(id);
-            nom = "Player" + id;
-            
-            dateConstruction = DateTime.Now.ToString("dd/MM/yyyy");
         }
-        
+
         public override string NomClasse()
         {
             return "Magicien";
         }
         
-        public virtual int VieMax => vieMax;
+        public override int VieMax => vieMax;
+        public override int Vie
+        {
+            get => vie;
+            set => vie = value;
+        }
         public override int ManaMax => manaMax;
 
         public void LancerSort(Personnage cible)
@@ -47,12 +42,29 @@ namespace RPG
             cible.RecevoirDegats(20);
         }
 
-        /*public void SelectionnerSort()
+        public void SelectionnerSort(Personnage cible)
         {
-            switch (Console.ReadLine())
+            Console.WriteLine("1 - Boule de feu");
+            Console.WriteLine("2 - Soin");
+            Console.WriteLine("3 - Buff dégâts");
+            
+            string choix = Console.ReadLine();
+
+            switch (choix)
             {
-                case ""
+                case "1":
+                    LancerSort(cible);
+                    break;
+                case "2":
+                    cible.Soigne(montantSoins);
+                    break;
+                case "3":
+                    cible.BuffDegats(montantBuffDegats);
+                    break;
+                default:
+                    Message.Add("Choix non disponible");
+                    break;
             }
-        }*/
+        }
     }
 }

@@ -73,7 +73,7 @@ using System.Collections;
                     joueur.ActionDeplacement();
                     break;
                 case "2":
-                    Console.WriteLine("Indiquez le n° de joueur a attaquer");
+                    Console.WriteLine("Indiquez le n° de joueur à attaquer");
                     joueur.ActionAttaque((player[StringToInt()] as Personnage));
                     break;
                 case "3":
@@ -81,12 +81,12 @@ using System.Collections;
                     break;
                 case "4":
                     Magicien magicien = (Magicien) joueur;
-                    Console.WriteLine("Indiquez le n° de joueur a attaquer");
-                    magicien.LancerSort((player[StringToInt()] as Personnage));
+                    Console.WriteLine("Indiquez le n° de joueur à ensorceler");
+                    magicien.SelectionnerSort((player[StringToInt()] as Personnage));
                     break;
                 case "5":
                     Voleur voleur = (Voleur) joueur;
-                    Console.WriteLine("Indiquez le n° de joueur a dérober");
+                    Console.WriteLine("Indiquez le n° de joueur à dérober");
                     voleur.VolerArme((player[StringToInt()] as Personnage));
                     break;
                 case "6":
@@ -94,7 +94,12 @@ using System.Collections;
                     Console.WriteLine("Indiquez le n° de l'arme voulue");
                     guerrier.AjouterArme();
                     break;
+                case "7":
+                    Guerrier guerrier2 = (Guerrier) joueur;
+                    guerrier2.JeterArme();
+                    break;
                 case "Q":
+                case "q":
                     run = false;
                     break;
                 default:
@@ -102,7 +107,7 @@ using System.Collections;
                     break;
             }
             
-            error = !(Message.IsEmpty());
+            error = !(Message.IsEmpty()); // vérifie qu'il n'y a pas eu d'erreur sur cette fonction
         }
 
         private string ConvertiChoix(string choix)
@@ -126,6 +131,7 @@ using System.Collections;
         public void AfficheChoix(Personnage joueur)
         {
             compteur = 1;
+            
             choix.Clear();
             Console.WriteLine("Actions possibles : ");
             
@@ -138,7 +144,9 @@ using System.Collections;
             if(joueur.NomClasse() == "Voleur")
                 AfficheMessageCompteur("Voler une arme", "5");
             if(joueur.NomClasse() == "Guerrier")
-                AfficheMessageCompteur("Changer d'arme", "6");
+                AfficheMessageCompteur("Ajouter une arme", "6");
+            if(joueur.NomClasse() == "Guerrier")
+                AfficheMessageCompteur("Jeter une arme", "7");
             
             Console.WriteLine("Q - Quitter");
         }
