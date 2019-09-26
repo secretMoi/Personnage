@@ -22,6 +22,9 @@
         protected const int coutPotionVie = 20;
         protected int buffDegats;
         protected string dateConstruction;
+        public const string GUERRIER = "Guerrier";
+        public const string MAGICIEN = "Magicien";
+        public const string VOLEUR = "Voleur";
 
         public Personnage(Ring ringObject, int arme = Arme.MAINS)
         {
@@ -182,6 +185,14 @@
             
             return etat;
         }
+        
+        public void Soigne(int montantSoins)
+        {
+            Vie += montantSoins;
+            
+            if (Vie > VieMax)
+                Vie = VieMax;
+        }
 
         public override string ToString()
         {
@@ -205,13 +216,5 @@
         }
 
         public string DateConstruction => dateConstruction;
-
-        public void Soigne(int montantSoins)
-        {
-            Vie += montantSoins;
-            
-            if (Vie > VieMax)
-                Vie = VieMax;
-        }
     }
 }

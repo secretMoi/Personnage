@@ -1,13 +1,14 @@
 ﻿﻿﻿using System;
 using System.Collections;
   using System.Linq;
+  using RPG.Maps;
 
   namespace RPG
 {
     class MenuAction
     {
-        private const int consoleX = 60;
-        private const int consoleY = 30;
+        /*private const int consoleX = 250;
+        private const int consoleY = 40;*/
 
         private bool run;
 
@@ -25,8 +26,8 @@ using System.Collections;
 
         public MenuAction()
         {
-            Console.SetWindowSize(consoleX, consoleY); // taille console
-            Console.SetBufferSize(consoleX * 2, consoleY * 4); // taille buffer
+            /*Console.SetWindowSize(consoleX, consoleY); // taille console
+            Console.SetBufferSize(consoleX, consoleY); // taille buffer*/
 
             player.Add(new Guerrier(ring));
             player.Add(new Magicien(ring, 0, 1));
@@ -39,6 +40,13 @@ using System.Collections;
         }
 
         public void ListeActions()
+        {
+            Console.SetCursorPosition(0, 7);
+            Map1 map1 = new Map1();
+            map1.AfficheMap();
+        }
+
+        /*public void ListeActions()
         {
             while (run)
             {
@@ -60,12 +68,13 @@ using System.Collections;
                 
                 Console.Clear();
             }
-        }
+        }*/
 
         private void Action(Personnage joueur)
         {
             string choix = Console.ReadLine();
             string choixConverti = ConvertiChoix(choix);
+            
             switch (choixConverti)
             {
                 case "1":
@@ -90,14 +99,19 @@ using System.Collections;
                     voleur.VolerArme((player[StringToInt()] as Personnage));
                     break;
                 case "6":
+                {
                     Guerrier guerrier = (Guerrier) joueur;
                     Console.WriteLine("Indiquez le n° de l'arme voulue");
                     guerrier.AjouterArme();
                     break;
+                }
                 case "7":
-                    Guerrier guerrier2 = (Guerrier) joueur;
-                    guerrier2.JeterArme();
+                {
+                    Guerrier guerrier = (Guerrier) joueur;
+                    guerrier.JeterArme();
                     break;
+                }
+                    
                 case "Q":
                 case "q":
                     run = false;
@@ -139,14 +153,15 @@ using System.Collections;
             AfficheMessageCompteur("Attaquer à max " + joueur.Arme.Portee + " cases", "2");
             AfficheMessageCompteur("Boire potion de vie contre mana", "3");
             
-            if(joueur.NomClasse() == "Magicien")
+            if(joueur.NomClasse() == Personnage.MAGICIEN)
                 AfficheMessageCompteur("Lancer un sort", "4");
-            if(joueur.NomClasse() == "Voleur")
+            if(joueur.NomClasse() == Personnage.VOLEUR)
                 AfficheMessageCompteur("Voler une arme", "5");
-            if(joueur.NomClasse() == "Guerrier")
+            if (joueur.NomClasse() == Personnage.GUERRIER)
+            {
                 AfficheMessageCompteur("Ajouter une arme", "6");
-            if(joueur.NomClasse() == "Guerrier")
                 AfficheMessageCompteur("Jeter une arme", "7");
+            }
             
             Console.WriteLine("Q - Quitter");
         }

@@ -10,11 +10,11 @@ using System.Collections;
         private new const int vieMax = 150; // new  car on override Personnage
         private new const int manaMax = 60;
         
-        public Guerrier(Ring ringObject, int arme = Arme.MAINS) : base(ringObject, arme)
+        public Guerrier(Ring ringObject, int arme = Arme.EPEE) : base(ringObject, arme)
         {
         }
 
-        public Guerrier(Ring ringObject, int x, int y = 0, int arme = Arme.MAINS) : base(ringObject, x, y, arme)
+        public Guerrier(Ring ringObject, int x, int y = 0, int arme = Arme.EPEE) : base(ringObject, x, y, arme)
         {
         }
         
@@ -91,7 +91,7 @@ using System.Collections;
         
         public override string NomClasse()
         {
-            return "Guerrier";
+            return GUERRIER;
         }
 
         public override Arme Arme => arme[arme.Count - 1] as Arme;

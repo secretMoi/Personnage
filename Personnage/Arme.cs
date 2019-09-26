@@ -8,6 +8,7 @@
         private int typeArme;
         private int degats;
         private int portee;
+        private int durabilite;
         private String nom;
         
         private const int armeMax = 3;
@@ -40,26 +41,31 @@
                     degats = 10;
                     portee = 2;
                     nom = "Bâton";
+                    durabilite = 5;
                     break;
                 case MAINS:
                     degats = 5;
                     portee = 1;
                     nom = "Mains nues";
+                    durabilite = 0;
                     break;
                 case EPEE:
                     degats = 20;
                     portee = 1;
                     nom = "Epée";
+                    durabilite = 20;
                     break;
                 case BOUCLIER:
                     degats = 7;
                     portee = 1;
                     nom = "Bouclier";
+                    durabilite = 15;
                     break;
                 default:
                     degats = 0;
                     portee = 0;
                     nom = "Aucune";
+                    durabilite = 0;
                     break;
             }
         }
@@ -97,6 +103,8 @@
         public string Nom => nom;
 
         public int Degats => degats;
+
+        public int Durabilite => durabilite;
 
         public int TypeArme
         {

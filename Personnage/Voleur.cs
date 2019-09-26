@@ -24,7 +24,7 @@ namespace RPG
         
         public override string NomClasse()
         {
-            return "Voleur";
+            return VOLEUR;
         }
 
         public void VolerArme(Personnage cible)

@@ -9,11 +9,11 @@ namespace RPG
         private const int montantBuffDegats = 10;
         private const int montantSoins = 15;
         
-        public Magicien(Ring ringObject, int arme = Arme.MAINS) : base(ringObject, arme)
+        public Magicien(Ring ringObject, int arme = Arme.BATON) : base(ringObject, arme)
         {
         }
 
-        public Magicien(Ring ringObject, int x, int y = 0, int arme = Arme.MAINS) : base(ringObject, x, y, arme)
+        public Magicien(Ring ringObject, int x, int y = 0, int arme = Arme.BATON) : base(ringObject, x, y, arme)
         {
         }
         
@@ -26,7 +26,7 @@ namespace RPG
 
         public override string NomClasse()
         {
-            return "Magicien";
+            return MAGICIEN;
         }
         
         public override int VieMax => vieMax;

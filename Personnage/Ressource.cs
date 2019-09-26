@@ -20,7 +20,7 @@ namespace RPG
             
             items = new ArrayList();
             
-            ChargeMax = 10;
+            ChargeMax = 20;
         }
 
         public int ChargeMax

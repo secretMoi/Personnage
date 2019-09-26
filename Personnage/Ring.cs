@@ -8,11 +8,11 @@ namespace RPG
 {
     public class Ring
     {
-        private string[,] ring;
-        private static int compteurItem = 0;
-        private int[] dimensions;
+        protected string[,] ring;
+        protected static int compteurItem = 0;
+        protected int[] dimensions;
 
-        private readonly Dictionary<int, List<int>> items = new Dictionary<int, List<int>>();
+        protected readonly Dictionary<int, List<int>> items = new Dictionary<int, List<int>>();
 
         public static int LEFT = -1;
         public static int RIGHT = 1;
