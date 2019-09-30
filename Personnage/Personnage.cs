@@ -3,20 +3,20 @@
 
  namespace RPG
 {
-    public abstract class Personnage
+    public abstract class Personnage : Etre.Etre
     {
         protected Arme arme;
         protected Ressource ressource;
         protected Banque banque;
-        protected int vie;
+
         protected int mana;
         protected static Ring ring;
         protected static int nombreJoueurs = 0;
         protected static ArrayList ids = new ArrayList();
-        protected bool etat; // si le perso est vivant
+
         protected int id;
-        protected string nom;
-        protected const int vieMax = 100;
+
+        
         protected const int potionVie = 20;
         protected const int manaMax = 100;
         protected const int coutPotionVie = 20;

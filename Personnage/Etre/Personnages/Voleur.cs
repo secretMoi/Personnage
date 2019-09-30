@@ -1,4 +1,5 @@
-﻿﻿using System;
+﻿﻿using RPG.Etre;
+ using RPG.Etre.Personnage;
 
 namespace RPG
 {
@@ -6,12 +7,8 @@ namespace RPG
     {
         protected new const int vieMax = 80; // new  car on override Personnage
         protected new const int manaMax = 60;
-        
-        public Voleur(Ring ringObject, int arme = Arme.MAINS) : base(ringObject, arme)
-        {
-        }
 
-        public Voleur(Ring ringObject, int x, int y = 0, int arme = Arme.MAINS) : base(ringObject, x, y, arme)
+        public Voleur(ManagerEtre managerEtre = null, int arme = Arme.MAINS) : base(Etre.Etre.managerEtre, arme)
         {
         }
         

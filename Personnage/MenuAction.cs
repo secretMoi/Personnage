@@ -1,22 +1,20 @@
 ﻿﻿﻿using System;
 using System.Collections;
-  using System.Linq;
-  using RPG.Maps;
-
-  namespace RPG
+using System.Linq;
+using RPG.Etre;
+using RPG.Maps;
+using RPG.Etre.Personnage;
+  
+namespace RPG
 {
     class MenuAction
     {
-        /*private const int consoleX = 250;
-        private const int consoleY = 40;*/
-
         private bool run;
-
-        private Ring ring = new Ring();
+        private ManagerEtre managerEtre;
+        private Map map;
         private ElementGraphique elementGraphique = new ElementGraphique();
         private ArrayList player = new ArrayList();
-
-        private int tourJoueur;
+        
         private int nombreJoueurs = 2;
 
         private bool error;
@@ -24,26 +22,61 @@ using System.Collections;
         private ArrayList choix = new ArrayList();
         private int compteur;
 
+        private const int tailleX = 230; private const int tailleY = 60;
+        private const int offsetMapX = 0; private const int offsetMapY = 7;
+        private const int offsetActionX = tailleX - 25; private const int offsetActionY = tailleY - 10;
+        
+
         public MenuAction()
         {
-            /*Console.SetWindowSize(consoleX, consoleY); // taille console
-            Console.SetBufferSize(consoleX, consoleY); // taille buffer*/
-
-            player.Add(new Guerrier(ring));
-            player.Add(new Magicien(ring, 0, 1));
+            Console.SetWindowSize(tailleX, tailleY);
+            Console.SetBufferSize(tailleX, tailleY);
+            Console.SetWindowPosition(0, 0);
+            
+            map = new Map1();
+            managerEtre = new ManagerEtre(map);
+            player.Add(new Magicien(managerEtre));
 
             nombreJoueurs = 2;
             error = false;
-            tourJoueur = 0;
 
             run = true;
         }
 
         public void ListeActions()
         {
-            Console.SetCursorPosition(0, 7);
-            Map1 map1 = new Map1();
-            map1.AfficheMap();
+            GenereCompetences();
+            GenereMap();
+            
+            while (run)
+            {
+                Action();
+            }
+        }
+
+        public void GenereCompetences()
+        {
+            
+        }
+
+        private void GenereMap()
+        {
+            Console.SetCursorPosition(offsetMapX, offsetMapY);
+            map.AfficheMap();
+        }
+
+        private void Action()
+        {
+            Console.SetCursorPosition(offsetActionX, offsetActionY);
+            
+            Console.Write("Choix action : ");
+            string choix = Console.ReadLine();
+            string choixConverti = ConvertiChoix(choix);
+            
+            switch (choixConverti)
+            {
+                
+            }
         }
 
         /*public void ListeActions()
@@ -68,7 +101,7 @@ using System.Collections;
                 
                 Console.Clear();
             }
-        }*/
+        }
 
         private void Action(Personnage joueur)
         {
@@ -79,11 +112,11 @@ using System.Collections;
             {
                 case "1":
                     Console.WriteLine("Déplacements : 4 = Gauche, 6 = Droite, 2 = Bas, 8 = Haut");
-                    joueur.ActionDeplacement();
+                    //joueur.ActionDeplacement();
                     break;
                 case "2":
                     Console.WriteLine("Indiquez le n° de joueur à attaquer");
-                    joueur.ActionAttaque((player[StringToInt()] as Personnage));
+                    //joueur.ActionAttaque((player[StringToInt()] as Personnage));
                     break;
                 case "3":
                     joueur.BoirePotion();
@@ -122,7 +155,7 @@ using System.Collections;
             }
             
             error = !(Message.IsEmpty()); // vérifie qu'il n'y a pas eu d'erreur sur cette fonction
-        }
+        }*/
 
         private string ConvertiChoix(string choix)
         {
@@ -172,12 +205,6 @@ using System.Collections;
             this.choix.Add(choix);
             
             compteur++;
-        }
-
-        private void IncrementeTour()
-        {
-            tourJoueur++;
-            if (tourJoueur == nombreJoueurs) tourJoueur = 0;
         }
 
         private int StringToInt()

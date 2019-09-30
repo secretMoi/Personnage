@@ -1,4 +1,6 @@
 ﻿﻿using System;
+ using RPG.Etre;
+ using RPG.Etre.Personnage;
 
 namespace RPG
 {
@@ -8,12 +10,8 @@ namespace RPG
         protected new const int manaMax = 180;
         private const int montantBuffDegats = 10;
         private const int montantSoins = 15;
-        
-        public Magicien(Ring ringObject, int arme = Arme.BATON) : base(ringObject, arme)
-        {
-        }
 
-        public Magicien(Ring ringObject, int x, int y = 0, int arme = Arme.BATON) : base(ringObject, x, y, arme)
+        public Magicien(ManagerEtre managerEtre = null, int arme = Arme.BATON) : base(managerEtre, arme)
         {
         }
         

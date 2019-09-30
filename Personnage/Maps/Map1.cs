@@ -4,7 +4,7 @@ namespace RPG.Maps
 {
     public class Map1 : Map
     {
-        public Map1(int tailleX = 100, int tailleY = 40)
+        public Map1(int tailleX = 35, int tailleY = 10) : base(tailleX, tailleY)
         {
         }
 
@@ -16,6 +16,7 @@ namespace RPG.Maps
             GenereRectangle(19, 3, 8, 1);
 
             tab[25, 3] = sortie;
+            tab[1, 1] = joueur;
         }
     }
 }

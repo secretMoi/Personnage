@@ -9,10 +9,7 @@
       <Compile Include="..\Seance_1_3\Program.cs">
         <Link>Program.cs</Link>
       </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Etre\Personnages" />
+      <Compile Remove="Personnage.cs" />
     </ItemGroup>
 
 </Project>
