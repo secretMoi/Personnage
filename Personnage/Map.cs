@@ -6,8 +6,10 @@ namespace RPG
 {
     public abstract class Map
     {
-        protected static int tailleX;
-        protected static int tailleY;
+        protected int tailleX;
+        protected int tailleY;
+        private int offsetX;
+        private int offsetY;
         
         private const string point = ".";
         private const string mur = "#";
@@ -19,35 +21,35 @@ namespace RPG
         
         protected string[,] tab;
         // items contient un id pour un élément et une liste pour ses positions et autres valeurs
-        private readonly Dictionary<int, List<int>> items = new Dictionary<int, List<int>>();
+        private readonly Dictionary<string, List<int>> items = new Dictionary<string, List<int>>();
         
-        public static int LEFT = -1;
-        public static int RIGHT = 1;
-        public static int DOWN = 1;
-        public static int UP = -1;
+        public const int LEFT = -1;
+        public const int RIGHT = 1;
+        public const int DOWN = 1;
+        public const int UP = -1;
         private static int compteurItem = 0;
         
         public Map(int tailleX = 100, int tailleY = 40)
         {
-            Map.tailleX = tailleX;
-            Map.tailleY = tailleY;
+            this.tailleX = tailleX;
+            this.tailleY = tailleY;
             tab = new string[tailleX, tailleY];
             
             GenereMap();
             GenereMur();
         }
         
-        public int AjouterElement(int etat = 1, int x = 0, int y = 0)
+        public string AjouterElement(string element, int x = 0, int y = 0)
         {
             compteurItem++;
-            items.Add(compteurItem, new List<int> { x, y }); // rajoute l'id avec ses coordonnées
+            items.Add(element, new List<int> { x, y }); // rajoute l'id avec ses coordonnées
 
-            tab[x, y] = etat.ToString();
+            tab[x, y] = element;
 
-            return compteurItem;
+            return element;
         }
         
-        public int[] PositionCourante(int id)
+        public int[] PositionCourante(string id)
         {
             int[] tab =
             {
@@ -91,7 +93,7 @@ namespace RPG
             if (tab[x - 1, y]     == null) tab[x - 1, y] = mur; // gauche
         }
         
-        public bool Deplace(int id, int x, int y = 0)
+        public bool Deplace(string id, int x, int y = 0)
         {
             // récupère la position courante de l'item
             int xCourant = items[id][0];
@@ -106,11 +108,40 @@ namespace RPG
             items[id][0] += x;
             items[id][1] += y;
             tab[items[id][0], items[id][1]] = id.ToString();
-
+            
+            ReDraw(id, x, y);
+            
             return true;
         }
+
+        public void ReDraw(string id, int x, int y = 0)
+        {
+            // récupère la position courante de l'item
+            int xCourant = items[id][0];
+            int yCourant = items[id][1];
+
+            int xSuivant = xCourant;
+            int ySuivant = yCourant;
+
+            if (x == RIGHT) xSuivant -= RIGHT;
+            else if (x == LEFT) xSuivant -= LEFT;
+            else if (y == UP) ySuivant -= UP;
+            else if (y == DOWN) ySuivant -= DOWN;
+            
+            Console.SetCursorPosition(offsetX + xCourant, offsetY + yCourant);
+            AfficheElement(xCourant, yCourant);
+            
+            Console.SetCursorPosition(offsetX + xSuivant, offsetY + ySuivant);
+            AfficheElement(xSuivant, ySuivant);
+        }
+
+        public void SetOffsets(int x, int y)
+        {
+            offsetX = x;
+            offsetY = y;
+        }
         
-        public int Distance(int id1, int id2)
+        public int Distance(string id1, string id2)
         {
             int x1 = items[id1][0];
             int y1 = items[id1][1];
@@ -119,6 +150,7 @@ namespace RPG
 
             int deltaX = x2 - x1;
             int deltaY = y2 - y1;
+            
             return (int) Math.Floor(Math.Sqrt(deltaX * deltaX + deltaY * deltaY));
         }
         
@@ -171,38 +203,59 @@ namespace RPG
             {
                 for (int x = 0; x < tailleX; x++)
                 {
-                    switch (tab[x, y])
-                    {
-                        case mur:
-                            ChangeCouleur(mur, ConsoleColor.Black, ConsoleColor.White);
-                            break;
-                        
-                        case point:
-                            Console.Write(tab[x, y]);
-                            break;
-                        
-                        case sortie:
-                            ChangeCouleur(sortie, ConsoleColor.Red, null);
-                            break;
-                        
-                        case joueur:
-                            ChangeCouleur(joueur, ConsoleColor.Green, ConsoleColor.Gray);
-                            break;
-                        
-                        default:
-                            Console.Write(" ");
-                            break;
-                    }
+                    AfficheElement(x, y);
                 }
                 
                 Console.WriteLine();
             }
         }
-        
-        public string Point => point;
-        public string Mur => mur;
-        public string Porte => porte;
-        public string Or => or;
-        public string Tresor => tresor;
+
+        private void AfficheElement(int x, int y)
+        {
+            switch (tab[x, y])
+            {
+                case mur:
+                    ChangeCouleur(mur, ConsoleColor.Black, ConsoleColor.White);
+                    break;
+                        
+                case point:
+                    Console.Write(tab[x, y]);
+                    break;
+                        
+                case sortie:
+                    ChangeCouleur(sortie, ConsoleColor.Red, null);
+                    break;
+                        
+                case joueur:
+                    ChangeCouleur(joueur, ConsoleColor.Green, ConsoleColor.Gray);
+                    break;
+                        
+                default:
+                    Console.Write(" ");
+                    break;
+            }
+        }
+
+        protected void PlaceElement(int x, int y, string element)
+        {
+            if (!CoordonneesOK(x, y))
+                return;
+
+            items.Add(element, new List<int> { x, y }); // rajoute l'id avec ses coordonnées
+            tab[x, y] = element;
+        }
+
+        private bool CoordonneesOK(int x, int y)
+        {
+            if (x > 0 && y > 0)
+            {
+                if (x < tailleX && y < tailleY)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

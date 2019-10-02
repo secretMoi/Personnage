@@ -1,7 +1,7 @@
 ﻿﻿using System;
 using System.Collections;
- using System.Linq;
- using RPG.Etre.Personnage;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RPG.Etre.Personnage
 {
@@ -55,6 +55,15 @@ namespace RPG.Etre.Personnage
                 if (Arme.EstValide(nombre-1)) arme.Add(new Arme(nombre-1));
                 else Message.Add("Arme non valide");
             }
+        }
+        
+        public override List<string> ListeCompetences()
+        {
+            List<string> listeSorts = new List<string>();
+            listeSorts.Add("Ajouter arme");
+            listeSorts.Add("Jeter arme");
+
+            return listeSorts;
         }
 
         public void JeterArme()

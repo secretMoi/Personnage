@@ -9,17 +9,18 @@
             this.map = map;
         }
 
-        public int AjouterElement()
+        public string AjouterElement()
         {
-            return map.AjouterElement();
+            //return map.AjouterElement("J");
+            return "J";
         }
 
-        public bool Deplace(int id, int x, int y = 0)
+        public bool Deplace(string id, int x, int y = 0)
         {
             return map.Deplace(id, x, y);
         }
 
-        public int Distance(int id1, int id2)
+        public int Distance(string id1, string id2)
         {
             return map.Distance(id1, id2);
         }

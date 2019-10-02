@@ -1,5 +1,6 @@
-﻿﻿using RPG.Etre;
- using RPG.Etre.Personnage;
+﻿﻿using System.Collections.Generic;
+using RPG.Etre;
+using RPG.Etre.Personnage;
 
 namespace RPG
 {
@@ -17,6 +18,14 @@ namespace RPG
             this.arme = new Arme(arme);
             vie = vieMax;
             mana = manaMax;
+        }
+        
+        public override List<string> ListeCompetences()
+        {
+            List<string> listeSorts = new List<string>();
+            listeSorts.Add("Voler arme");
+
+            return listeSorts;
         }
         
         public override string NomClasse()

@@ -7,6 +7,12 @@ namespace RPG.Maps
         public Map1(int tailleX = 35, int tailleY = 10) : base(tailleX, tailleY)
         {
         }
+        
+        public Map1()
+        {
+            tailleX = 35;
+            tailleY = 10;
+        }
 
         protected override void GenereMap()
         {
@@ -15,8 +21,8 @@ namespace RPG.Maps
             GenereRectangle(14, 1, 5, 5);
             GenereRectangle(19, 3, 8, 1);
 
-            tab[25, 3] = sortie;
-            tab[1, 1] = joueur;
+            PlaceElement(25, 3, sortie);
+            PlaceElement(1, 1, joueur);
         }
     }
 }

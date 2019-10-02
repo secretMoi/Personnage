@@ -1,6 +1,7 @@
 ﻿﻿using System;
- using RPG.Etre;
- using RPG.Etre.Personnage;
+using System.Collections.Generic;
+using RPG.Etre;
+using RPG.Etre.Personnage;
 
 namespace RPG
 {
@@ -38,6 +39,16 @@ namespace RPG
         public void LancerSort(Personnage cible)
         {
             cible.RecevoirDegats(20);
+        }
+
+        public override List<string> ListeCompetences()
+        {
+            List<string> listeSorts = new List<string>();
+            listeSorts.Add("Boule de feu");
+            listeSorts.Add("Soin");
+            listeSorts.Add("Buff dégâts");
+
+            return listeSorts;
         }
 
         public void SelectionnerSort(Personnage cible)

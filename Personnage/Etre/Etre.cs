@@ -9,7 +9,7 @@ namespace RPG.Etre
         protected int vieMax;
         protected bool etat; // si le perso est vivant
         protected string nom;
-        protected int id;
+        protected string id;
         protected static ArrayList ids = new ArrayList();
         protected static ManagerEtre managerEtre;
         
@@ -54,11 +54,13 @@ namespace RPG.Etre
         public bool APortee(Etre etre)
         {
             if (etre.Existe())
-                return managerEtre.Distance(id, etre.id) <= 1; // TODO portée arme
+                return managerEtre.Distance(id, etre.id) <= 1;
             
             return false;
         }
-        
+
+        public string Id => id;
+
         public virtual int VieMax => vieMax;
         public virtual int Vie
         {

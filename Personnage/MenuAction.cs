@@ -1,5 +1,6 @@
 ﻿﻿﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using RPG.Etre;
 using RPG.Maps;
@@ -9,23 +10,30 @@ namespace RPG
 {
     class MenuAction
     {
-        private bool run;
         private ManagerEtre managerEtre;
+        
         private Map map;
+        
         private ElementGraphique elementGraphique = new ElementGraphique();
         private ArrayList player = new ArrayList();
+        
+        private MenuListe menuListe = new MenuListe();
+        List<string> cles = new List<string>();
         
         private int nombreJoueurs = 2;
 
         private bool error;
+        private bool run;
 
         private ArrayList choix = new ArrayList();
+        
         private int compteur;
 
         private const int tailleX = 230; private const int tailleY = 60;
         private const int offsetMapX = 0; private const int offsetMapY = 7;
         private const int offsetActionX = tailleX - 25; private const int offsetActionY = tailleY - 10;
-        
+        private const int offsetCompetencesX = tailleX / 2 - 20; private const int offsetCompetencesY = 0;
+        private const int offsetJoueurX = tailleX - 30; private const int offsetJoueurY = 0;
 
         public MenuAction()
         {
@@ -34,6 +42,7 @@ namespace RPG
             Console.SetWindowPosition(0, 0);
             
             map = new Map1();
+            map.SetOffsets(offsetMapX, offsetMapY);
             managerEtre = new ManagerEtre(map);
             player.Add(new Magicien(managerEtre));
 
@@ -45,8 +54,9 @@ namespace RPG
 
         public void ListeActions()
         {
-            GenereCompetences();
-            GenereMap();
+            AfficheCompetences();
+            AffichePerso();
+            AfficheMap();
             
             while (run)
             {
@@ -54,12 +64,31 @@ namespace RPG
             }
         }
 
-        public void GenereCompetences()
+        private void AffichePerso()
         {
-            
+            Console.SetCursorPosition(offsetJoueurX, offsetJoueurY);
+            (player[0] as Personnage).AfficherEtat(elementGraphique);
         }
 
-        private void GenereMap()
+        private void AfficheCompetences()
+        {
+            Console.SetCursorPosition(offsetCompetencesX, offsetCompetencesY);
+            
+            AjouteClesLettres("a", "b", "c", "d", "e");
+            menuListe.AjouterItems(cles, (player[0] as Personnage).ListeCompetences());
+            
+            menuListe.AfficherItems();
+        }
+        
+        private void AjouteClesLettres(params string[] cle)
+        {
+            foreach (string element in cle)
+            {
+                cles.Add(element);
+            }
+        }
+
+        private void AfficheMap()
         {
             Console.SetCursorPosition(offsetMapX, offsetMapY);
             map.AfficheMap();
@@ -70,12 +99,28 @@ namespace RPG
             Console.SetCursorPosition(offsetActionX, offsetActionY);
             
             Console.Write("Choix action : ");
-            string choix = Console.ReadLine();
-            string choixConverti = ConvertiChoix(choix);
             
-            switch (choixConverti)
+            ConsoleKeyInfo _Key = Console.ReadKey();
+            Personnage joueur = (player[0] as Personnage);
+            switch (_Key.Key)
             {
-                
+                case ConsoleKey.RightArrow:
+                    map.Deplace(joueur.Id, Map.RIGHT);
+                    break;
+                case ConsoleKey.LeftArrow:
+                    map.Deplace(joueur.Id, Map.LEFT);
+                    break;
+                case ConsoleKey.UpArrow:
+                    map.Deplace(joueur.Id, 0, Map.UP);
+                    break;
+                case ConsoleKey.DownArrow:
+                    map.Deplace(joueur.Id, 0, Map.DOWN);
+                    break;
+                case ConsoleKey.Q:
+                    run = false;
+                    break;
+                default:
+                    break;
             }
         }
 

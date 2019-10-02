@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace RPG.Etre.Personnage
 {
@@ -43,6 +43,54 @@ namespace RPG.Etre.Personnage
             if (Vie > VieMax)
                 Vie = VieMax;
         }
+        public void AfficherEtat(ElementGraphique elementGraphique)
+        {
+            int offsetX = Console.CursorLeft; // enregistre le décalage gauche pour ne pas le perdre lors du retour à la ligne
+            
+            Console.WriteLine("Classe : " + NomClasse());
+            Console.CursorLeft = offsetX;
+            Console.WriteLine("Nom : " + nom);
+            Console.CursorLeft = offsetX;
+            
+            Console.Write("Vie : {0} / {1} ", vie, VieMax);
+            elementGraphique.BarreProgression(vie, VieMax, ConsoleColor.Red);
+            Console.WriteLine();
+            Console.CursorLeft = offsetX;
+            
+            Console.Write("Mana : {0} / {1} ", mana, ManaMax);
+            elementGraphique.BarreProgression(mana, ManaMax, ConsoleColor.Blue);
+            Console.WriteLine();
+            Console.CursorLeft = offsetX;
+            
+            Console.WriteLine("Arme : {0} ({1})", Arme.Nom, Arme.Degats);
+            Console.CursorLeft = offsetX;
+            Console.WriteLine("Portée arme : " + Arme.Portee);
+            Console.CursorLeft = offsetX;
+
+            AfficherBuff();
+            
+            Console.WriteLine("");
+        }
+        
+        public void AfficherBuff()
+        {
+            ConsoleColor ancienneCouleur = Console.ForegroundColor;
+            if (buffDegats > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("Buff dégâts : " + buffDegats);
+            }
+
+            Console.ForegroundColor = ancienneCouleur;
+        }
+        
+        public bool APortee(Personnage personnage)
+        {
+            if (personnage.Existe())
+                return managerEtre.Distance(id, personnage.id) <= Arme.Portee;
+            
+            return false;
+        }
         
         public void BoirePotion()
         {
@@ -58,6 +106,8 @@ namespace RPG.Etre.Personnage
         {
             buffDegats = buff;
         }
+
+        public abstract List<string> ListeCompetences();
         
         public abstract string NomClasse();
         
