@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using RPG.Etre;
+  using System.Timers;
+  using RPG.Etre;
 using RPG.Maps;
 using RPG.Etre.Personnage;
   
@@ -45,6 +46,7 @@ namespace RPG
             map.SetOffsets(offsetMapX, offsetMapY);
             managerEtre = new ManagerEtre(map);
             player.Add(new Magicien(managerEtre));
+            managerEtre.GenereMonstres();
 
             nombreJoueurs = 2;
             error = false;
@@ -57,11 +59,21 @@ namespace RPG
             AfficheCompetences();
             AffichePerso();
             AfficheMap();
-            
+
             while (run)
             {
+                Timer t = new Timer();
+                t.Interval = 1000; // In milliseconds
+                t.AutoReset = true; // Stops it from repeating
+                t.Elapsed += new ElapsedEventHandler(TimerElapsed);
+                t.Start();
                 Action();
             }
+        }
+
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            managerEtre.DeplaceMonstres();
         }
 
         private void AffichePerso()
@@ -100,9 +112,9 @@ namespace RPG
             
             Console.Write("Choix action : ");
             
-            ConsoleKeyInfo _Key = Console.ReadKey();
+            ConsoleKeyInfo key = Console.ReadKey();
             Personnage joueur = (player[0] as Personnage);
-            switch (_Key.Key)
+            switch (key.Key)
             {
                 case ConsoleKey.RightArrow:
                     map.Deplace(joueur.Id, Map.RIGHT);

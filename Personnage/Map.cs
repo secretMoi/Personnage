@@ -18,10 +18,11 @@ namespace RPG
         protected const string tresor = "$";
         protected const string sortie = "X";
         protected const string joueur = "J";
+        protected const string monstre = "M";
         
         protected string[,] tab;
         // items contient un id pour un élément et une liste pour ses positions et autres valeurs
-        private readonly Dictionary<string, List<int>> items = new Dictionary<string, List<int>>();
+        private readonly Dictionary<string, List<int>> items;
         
         public const int LEFT = -1;
         public const int RIGHT = 1;
@@ -34,6 +35,8 @@ namespace RPG
             this.tailleX = tailleX;
             this.tailleY = tailleY;
             tab = new string[tailleX, tailleY];
+
+            items = new Dictionary<string, List<int>>();
             
             GenereMap();
             GenereMur();
@@ -47,6 +50,19 @@ namespace RPG
             tab[x, y] = element;
 
             return element;
+        }
+
+        public string LieElement(List<int> coordonnees)
+        {
+            foreach(KeyValuePair<string, List<int>> entry in items) // parcours le dictionnaire
+            {
+                if (entry.Value[0] == coordonnees[0] && entry.Value[1] == coordonnees[1]) // si ses coordonnees correspondent
+                {
+                    return entry.Key;
+                }
+            }
+
+            return null; // si pas trouvé
         }
         
         public int[] PositionCourante(string id)
@@ -102,12 +118,13 @@ namespace RPG
             if (PositionPossible(x + xCourant, y + yCourant) == false)
                 return false;
 
+            string ancienneValeur = tab[xCourant, yCourant];
             tab[xCourant, yCourant] = point; // supprime la position actuelle
 
             // change la position
             items[id][0] += x;
             items[id][1] += y;
-            tab[items[id][0], items[id][1]] = id.ToString();
+            tab[items[id][0], items[id][1]] = ancienneValeur;
             
             ReDraw(id, x, y);
             
@@ -159,7 +176,7 @@ namespace RPG
             // si on ne sort pas du ring et que la position est inoccupée
             if (x < tailleX && x >= 0 && y < tailleY && y >= 0)
             {
-                if (tab[x, y] == point) // si la case est vide
+                if (tab[x, y] == point || tab[x, y] == sortie) // si la case est vide
                     return true;
             }
                 
@@ -229,6 +246,10 @@ namespace RPG
                 case joueur:
                     ChangeCouleur(joueur, ConsoleColor.Green, ConsoleColor.Gray);
                     break;
+                
+                case monstre:
+                    ChangeCouleur(monstre, ConsoleColor.Red, null);
+                    break;
                         
                 default:
                     Console.Write(" ");
@@ -241,8 +262,25 @@ namespace RPG
             if (!CoordonneesOK(x, y))
                 return;
 
-            items.Add(element, new List<int> { x, y }); // rajoute l'id avec ses coordonnées
+            items.Add(element + compteurItem, new List<int> { x, y }); // rajoute l'id avec ses coordonnées
             tab[x, y] = element;
+
+            compteurItem++;
+        }
+
+        public List<List<int>> ListeMonstres()
+        {
+            List<List<int>> liste = new List<List<int>>();
+
+            foreach(KeyValuePair<string, List<int>> entry in items) // parcours le dictionnaire
+            {
+                if (entry.Key.StartsWith(monstre)) // si c'est un monstre
+                {
+                    liste.Add(entry.Value); // rajoute ses coordonnées
+                }
+            }
+
+            return liste;
         }
 
         private bool CoordonneesOK(int x, int y)

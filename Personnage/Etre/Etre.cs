@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 
 namespace RPG.Etre
@@ -18,7 +18,7 @@ namespace RPG.Etre
             if(Etre.managerEtre == null)
                 Etre.managerEtre = managerEtre;
 
-            id = managerEtre.AjouterElement();
+            id = Etre.managerEtre.AjouterElement();
             
             etat = true;
         }
@@ -33,7 +33,7 @@ namespace RPG.Etre
         public void SeDeplace(int x, int y = 0)
         {
             bool resultat = managerEtre.Deplace(id, x, y);
-
+            
             if (resultat == false)
                 Message.Add("Déplacement impossible");
         }
@@ -59,7 +59,11 @@ namespace RPG.Etre
             return false;
         }
 
-        public string Id => id;
+        public string Id
+        {
+            get => id;
+            set => id = value;
+        }
 
         public virtual int VieMax => vieMax;
         public virtual int Vie
